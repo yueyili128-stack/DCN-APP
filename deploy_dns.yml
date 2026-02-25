@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: as-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: as
+  template:
+    metadata:
+      labels:
+        app: as
+    spec:
+      containers:
+      - name: as
+        image: as
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 53533
+          protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: as-service
+spec:
+  type: NodePort
+  selector:
+    app: as
+  ports:
+    - port: 53533
+      targetPort: 53533
+      nodePort: 30001
+      protocol: UDP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fs-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fs
+  template:
+    metadata:
+      labels:
+        app: fs
+    spec:
+      containers:
+      - name: fs
+        image: fs
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 53534
+          protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fs-service
+spec:
+  type: NodePort
+  selector:
+    app: fs
+  ports:
+    - port: 53534
+      targetPort: 53534
+      nodePort: 30002
+      protocol: UDP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: us-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: us
+  template:
+    metadata:
+      labels:
+        app: us
+    spec:
+      containers:
+      - name: us
+        image: us
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 53535
+          protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: us-service
+spec:
+  type: NodePort
+  selector:
+    app: us
+  ports:
+    - port: 53535
+      targetPort: 53535
+      nodePort: 30003
+      protocol: UDP
