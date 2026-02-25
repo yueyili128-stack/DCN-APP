@@ -64,16 +64,4 @@ for /f "tokens=*" %i in ('docker inspect -f "{{range .NetworkSettings.Networks}}
 
 curl -X PUT -H "Content-Type: application/json" -d "{\"hostname\":\"fibonacci.com\",\"ip\":\"%FS_IP%\",\"as_ip\":\"%AS_IP%\",\"as_port\":\"53533\"}" http://localhost:9090/register
 curl "http://localhost:8080/fibonacci?hostname=fibonacci.com&fs_port=9090&number=10&as_ip=%AS_IP%&as_port=53533"
-```
 
-### Troubleshooting
-```bash
-# Container name conflict
-docker stop as && docker rm as
-docker stop fs && docker rm fs
-docker stop us && docker rm us
-
-# FS port mismatch (9091)
-docker run --network dns_network --name fs -p 9090:9090 -p 9091:9091 -d dns-fs:latest
-curl -X PUT -H "Content-Type: application/json" -d "{\"hostname\":\"fibonacci.com\",\"ip\":\"%FS_IP%\",\"as_ip\":\"%AS_IP%\",\"as_port\":\"53533\"}" http://localhost:9091/register
-```
